@@ -55,7 +55,7 @@ class IsAdminOrReadOnly(permissions.BasePermission):
             return True
 
         # Check if the user has core role
-        return request.user and request.user.role == UserRoles.ADMIN.value
+        return request.user or request.user.role == UserRoles.ADMIN.value or request.user.is_superuser
 
 
 class IsCustomer(permissions.BasePermission):

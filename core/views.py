@@ -66,11 +66,10 @@ class AdminUsersViewSet(viewsets.GenericViewSet):
     queryset_managers = Universal.objects.filter(role=UserRoles.MANAGER.value)
     queryset_users = Universal.objects.filter(role=UserRoles.CUSTOMER.value)
     queryset_waiters = Universal.objects.filter(role=UserRoles.WAITER.value)
-    serializer_class_managers = ManagerSerializer
+    serializer_class_managers = UniversalSerializer
     serializer_class_users = RestaurantWaiterSerializer
     serializer_class_count = AdminViewCountSerializer
     permission_classes = [IsAdminOrReadOnly, IsAuthenticated]
-    authentication_classes = [SessionAuthentication]
 
     def get_serializer_class(self):
         if self.action == 'manager_list':

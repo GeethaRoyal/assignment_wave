@@ -18,7 +18,7 @@ router.register(r'waiter-history', WaiterHistoryViewSet, basename='waiter-histor
 router.register(r'menus', MenuViewSet, basename='menu')
 router.register(r'table-no', TableNoViewSet, basename='table-no')
 router.register(r'billing-history', BillingHistoryViewSet, basename='billing-history')
-router.register(r'core', AdminUsersViewSet, basename='core-view')
+router.register(r'admin', AdminUsersViewSet, basename='admin-view')
 router.register(r'order', OrderViewSet, basename='order')
 router.register(r'user-order', UserOrderViewSet, basename='user-order')
 router.register(r'user', UserViewSet, basename="users")
@@ -37,7 +37,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('api/', include(router.urls)),
-    path('api/check_username', CheckUsernameAPIView.as_view()),
+    path('', include(router.urls)),
+    path('check_username/', CheckUsernameAPIView.as_view()),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]

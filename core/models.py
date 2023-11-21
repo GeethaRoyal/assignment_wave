@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User, AbstractUser
 from django.db import models
 from common.constants import REQUEST_STATUS_CHOICES, BILLING_STATUS_CHOICES, TABLE_STATUS_CHOICES, \
     PAYMENT_STATUS_CHOICES
@@ -40,16 +41,18 @@ class WaiterHistory(models.Model):
         verbose_name = "waiter_history"
 
 
-class Universal(models.Model):
+class Universal(AbstractUser):
     id = models.CharField(max_length=255)
     username = models.CharField(max_length=255, primary_key=True)
     password = models.CharField(max_length=255)
-    role = models.CharField(max_length=255)
-    phone_number = models.BigIntegerField()
+    role = models.CharField(max_length=255, null=True, blank=True)
+    phone_number = models.BigIntegerField(null=True, blank=True)
     name = models.CharField(max_length=255)
-    date_column = models.DateField()
-    resId = models.CharField(max_length=255)
+    date_column = models.DateField(null=True, blank=True)
+    resId = models.CharField(max_length=255, null=True, blank=True)
     is_removed = models.BooleanField(default=False)
+
+    USERNAME_FIELD = "username"
 
     def __str__(self):
         return self.username
