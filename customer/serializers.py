@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from core.models import Menu, Universal, Order
+from core.models import Menu, Universal, Order, Tax, Allotment
 from core.serializers import ItemSerializer
 
 
@@ -28,3 +28,15 @@ class OrderItemsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ["id", "total", "items"]
+
+
+class TaxSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tax
+        fields = "__all__"
+
+
+class AllotmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Allotment
+        fields = "__all__"

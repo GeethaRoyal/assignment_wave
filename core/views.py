@@ -1,5 +1,4 @@
 from rest_framework import viewsets, status
-from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
@@ -8,46 +7,13 @@ from rest_framework.response import Response
 from common.enums import UserRoles
 from core.models import (
     Manager,
-    Menu,
     RestaurantWaiter, Order, Universal, DJ,
 )
 from core.serializers import (
-    RestaurantWaiterSerializer, AdminViewCountSerializer, DJSerializer,
+    RestaurantWaiterSerializer, DJSerializer,
 )
-from customer.serializers import MenuSerializer, UniversalSerializer
-from manager.serializers import ManagerSerializer
+from customer.serializers import UniversalSerializer
 from common.permissions import  IsAdminOrReadOnly
-
-
-class MenuViewSet(viewsets.ModelViewSet):
-    queryset = Menu.objects.filter(is_removed=False)
-    serializer_class = MenuSerializer
-    permission_classes = [IsAdminOrReadOnly]
-
-    def list(self, request, *args, **kwargs):
-        menu_items = Menu.objects.filter(is_removed=False)
-        serializer = MenuSerializer(menu_items, many=True)
-
-        return Response({"menu": serializer.data})
-
-    def create(self, request, *args, **kwargs):
-        serializer = MenuSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "Menu item added successfully"}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def destroy(self, request, *args, **kwargs):
-        menu_name = request.data.get('name', None)
-        if not menu_name:
-            return Response({"message": "Name parameter is required"}, status=status.HTTP_400_BAD_REQUEST)
-        try:
-            menu_item = Menu.objects.get(menu_name=menu_name)
-            menu_item.is_removed = True
-            menu_item.save()
-            return Response({"message": "Done"})
-        except Menu.DoesNotExist:
-            return Response({"message": "Menu item not found"}, status=status.HTTP_404_NOT_FOUND)
 
 
 class CheckUsernameAPIView(APIView):
@@ -68,18 +34,13 @@ class AdminUsersViewSet(viewsets.GenericViewSet):
     queryset_waiters = Universal.objects.filter(role=UserRoles.WAITER.value)
     serializer_class_managers = UniversalSerializer
     serializer_class_users = RestaurantWaiterSerializer
-    serializer_class_count = AdminViewCountSerializer
-    permission_classes = [IsAdminOrReadOnly, IsAuthenticated]
+    # permission_classes = [IsAdminOrReadOnly, IsAuthenticated]
 
     def get_serializer_class(self):
         if self.action == 'manager_list':
             return self.serializer_class_managers
         elif self.action == 'users_list':
             return self.serializer_class_users
-        elif self.action == 'remove_manager':
-            return ""
-        else:
-            return self.serializer_class_count
 
     @action(detail=False, methods=['GET'], url_path='manager_list')
     def admin_manager_list(self, request):

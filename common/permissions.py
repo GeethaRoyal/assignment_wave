@@ -78,3 +78,12 @@ class OrderPermission(permissions.BasePermission):
 
         else:
             return False
+
+class IsWaiter(permissions.BasePermission):
+    """
+    Custom permission to only allow waiters or managers to access the view.
+    """
+
+    def has_permission(self, request, view):
+        # Assuming 'role' is a field in your Manager model indicating the user role
+        return request.user and  request.user.role == UserRoles.WAITER.value

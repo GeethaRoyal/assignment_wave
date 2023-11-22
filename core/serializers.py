@@ -21,9 +21,6 @@ class RestaurantWaiterSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class AdminViewCountSerializer(serializers.ModelField):
-    count = serializers.IntegerField()
-
 
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:

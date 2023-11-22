@@ -19,6 +19,13 @@ from django.urls import path, include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from rest_framework.authentication import TokenAuthentication
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+from core.views import CheckUsernameAPIView
+
 schema_view = get_schema_view(
     openapi.Info(
         title="Song Wave",
@@ -28,6 +35,7 @@ schema_view = get_schema_view(
         contact=openapi.Contact(email="contact@yourapp.com"),
         license=openapi.License(name="Your License"),
     ),
+    authentication_classes= (TokenAuthentication, ),
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
@@ -39,5 +47,8 @@ urlpatterns = [
     path('api/customer/', include('customer.urls')),
     path('api/manager/', include('manager.urls')),
     path('api/waiter/', include('waiter.urls')),
+    path('check_username/', CheckUsernameAPIView.as_view()),
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]

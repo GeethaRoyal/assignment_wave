@@ -16,15 +16,6 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     queryset = Universal.objects.filter(is_removed=False)
 
-    @action(detail=False, methods=['GET'], url_path='add_manager')
-    def add_manager(self, request, *args, **kwargs):
-        from manager.serializers import ManagerSerializer
-        serializer = ManagerSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "Manager added successfully"}, status=status.HTTP_201_CREATED)
-        else:
-            return Response({"error": "Invalid payload format"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserOrderViewSet(viewsets.ViewSet):
